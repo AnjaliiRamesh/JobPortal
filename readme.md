@@ -5,8 +5,11 @@ creating companySchema at 48:18
 creating applicationSchema at 51:00
 
 # Controllers starts at 55:00
-creating userController at 55:07
+creating userController at 55:07 
 craeted regiter
 creating login control at 1:00:20
+creating logout control at 1:10:20
 
 
+# Route starts at 1:19:00
+creating userRoute at 1:19:44
