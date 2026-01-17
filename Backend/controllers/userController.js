@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 // Resgister
-export const register = async (req, res)=>{
+export const register = async (req,res)=>{
    try {
      const {fullname, email, phone, password, role} = req.body;
      if(!fullname || !email || !phone || !password || !role){
@@ -13,7 +13,7 @@ export const register = async (req, res)=>{
          });
      };
      let user = await User.findOne({email});
-     if(!user){
+     if(user){
          return res.status(400).json({
              message: "User does not exist",
              success:false
@@ -41,7 +41,7 @@ export const register = async (req, res)=>{
 
 
 //login controller
-export const login = async (req, res)=>{
+export const login = async (req,res)=>{
     try {
         const {email, password, role} = req.body;
          if(!email ||  !password || !role){
@@ -50,10 +50,10 @@ export const login = async (req, res)=>{
              success:false
          });
      };
-     const user = await User.findOne({email});
+     let user = await User.findOne({email});
      if(!user){
           return res.status(400).json({
-             message: "User alread exists!!",
+             message: "Incorrect email or password",
              success:false,
          })
      }
@@ -75,7 +75,7 @@ if(role != user.role){
 const tokenData = {
     userId:user._id 
 }
-const token = await jwt.sign(tokenData, process.env.SECRET_KEY, {expiresIn: '1d'});
+const token =  await jwt.sign(tokenData, process.env.SECRET_KEY, {expiresIn: '1d'});
 user = {
     _id:user._id,
     fullname:user.fullname,
@@ -103,6 +103,7 @@ export const logout = async (req,res)=>{
     try {
         return res.status(200).cookie("token", "", {maxAge:0}).json({
             message: "Logged out successfully",
+            success: true
         })
     } catch (error) {
         console.log(error);
@@ -145,7 +146,7 @@ export const updateProfile = async (req, res)=>{
      // resume comes later here...
      await user.save();
 
-     user = {
+    user = {
     _id:user._id,
     fullname:user.fullname,
     email:user.email,
